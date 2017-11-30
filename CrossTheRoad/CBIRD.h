@@ -1,6 +1,5 @@
 #pragma once
 #include "COBSTACLE.h"
-#include <iostream>
 
 class CBIRD :public COBSTACLE
 {

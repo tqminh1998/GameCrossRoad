@@ -10,12 +10,13 @@ CGAME::CGAME()
 		}
 	}
 
-	m_density = 15;
+	m_density = BasicDensity;
 }
 
 void CGAME::SetGame()
 {
 	v_obs.resize(m_density);
+	m_player.BackToStart();
 	
 	for (int i = 0; i < v_obs.size(); i++)
 	{
@@ -29,6 +30,55 @@ void CGAME::SetGame()
 		else if (x == 3)
 			v_obs[i] = new CDINOSAUR;
 	}
+}
+
+void CGAME::NewGame()
+{
+	m_density = BasicDensity;
+	this->SetGame();
+}
+
+void CGAME::NextLevel()
+{
+	m_density += 10;
+	this->WaitingEffect();
+	this->SetGame();
+}
+
+int CGAME::LoseGame()
+{
+	CONSOLE cs;
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y);
+	cs.TextColor(YELLOW);
+	cout << "You Lose";
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
+	cout << "1. Play again";
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 2);
+	cout << "2. Back to main menu";
+	char key = '0';
+	do {
+		if (_kbhit())
+			key = _getch();
+	} while (key != '1' && key != '2');
+
+	if (key == '1')
+		return 1;
+
+	return 0;
+}
+
+void CGAME::SaveGame()
+{
+	CONSOLE cs;
+	string file_name;
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y);
+	cout << "Enter file name:";
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
+	cin >> file_name;
+	
+	ofstream fout(file_name, ios::binary);
+	
+	fout.write((char*)this, sizeof(CGAME));
 }
 
 void CGAME::DrawPlayArea()
@@ -63,6 +113,58 @@ void CGAME::DrawPlayArea()
 	}
 }
 
+void CGAME::DrawInfoArea()
+{
+	//left col
+	for (int i = 4; i < GameAreaHeight; i++)
+	{
+		Buffer[i][76].DrawIt(InfoFrameShap, CYAN);
+	}
+	//top bar
+	for (int i = 76; i < 105; i++)
+	{
+		Buffer[4][i].DrawIt(InfoFrameShap, CYAN);
+	}
+	//middle bar
+	for (int i = 76; i < 105; i++)
+	{
+		Buffer[GameAreaHeight - 11][i].DrawIt(InfoFrameShap, CYAN);
+	}
+	//right col
+	for (int i = 4; i < GameAreaHeight; i++)
+	{
+		Buffer[i][105].DrawIt(InfoFrameShap, CYAN);
+	}
+	//bottom bar
+	for (int i = 76; i < 105; i++)
+	{
+		Buffer[GameAreaHeight - 1][i].DrawIt(InfoFrameShap, CYAN);
+	}
+
+	//Level
+	this->DrawString(78, 12, "LEVEL: ", RED);
+	if (m_density == BasicDensity)
+		this->DrawString(84, 12, "EASY", WHITE);
+	if (m_density == BasicDensity + 10)
+		this->DrawString(84, 12, "MEDIUM", WHITE);
+	if (m_density == BasicDensity + 20)
+		this->DrawString(84, 12, "HARD", WHITE);
+	if (m_density == BasicDensity + 30)
+		this->DrawString(84, 12, "EXPERT", WHITE);
+	if (m_density == BasicDensity + 40)
+		this->DrawString(84, 12, "LEGEND", WHITE);
+	//Save
+	this->DrawString(78, 16, "Press L: Save", GREY);
+	this->DrawString(78, 17, "Press Esc: Back to menu", GREY);
+}
+
+void CGAME::DrawString(int x, int y, string s, int color)
+{
+	for (int i = 0; i < s.length(); i++)
+	{
+		Buffer[y][i + x].DrawIt(s[i], color);
+	}
+}
 
 void CGAME::DrawBlock(int x, int y, int hei, int wid,
 	char **block, int color)
@@ -77,7 +179,7 @@ void CGAME::DrawBlock(int x, int y, int hei, int wid,
 void CGAME::DrawPlayer()
 {
 	this->DrawBlock(m_player.GETX(), m_player.GETY(), 2, 1,
-		m_player.GETSHAPE(), WHITE);
+		m_player.GETSHAPE(), PINK);
 }
 
 void CGAME::DrawObstacle()
@@ -105,6 +207,7 @@ void CGAME::DrawBuffer()
 void CGAME::DISPLAY()
 {
 	this->DrawPlayArea();
+	this->DrawInfoArea();
 	this->DrawPlayer();
 	this->DrawObstacle();
 	this->DrawBuffer();
@@ -115,6 +218,12 @@ int CGAME::MOVEMENT()
 	if (_kbhit())
 	{
 		char key = _getch();
+
+		if (key == 27)
+			return 1;
+
+		if (key == 'l')
+			this->SaveGame();
 
 		m_player.MOVE(key);
 
@@ -127,3 +236,139 @@ int CGAME::MOVEMENT()
 
 	return 0;
 }
+
+int CGAME::PROCESS()
+{
+	if (m_player.isImpact(v_obs))
+		return 1;
+
+	if (m_player.isFinish())
+		return 2;
+
+	return 0;
+}
+
+int CGAME::StartGame()
+{
+	CONSOLE cs;
+	//title line 1
+	cs.TextColor(BLUE);
+
+
+	cs.gotoXY(0, 0);
+	cout << "  _________                            __________                  .___\n";
+	cout << "  \\\_   ___ \_______  ____  ______ _____\\\______   \\\ _________     __| _/\n";
+	cout << "  /    \\\  \\\/\\\_  __ \\\/  _ \\\/  ___//  ___/|       _//  _ \\\__  \\\   / __ | \n";
+	cout << "  \\\     \\\____|  | \\\(  <_> )___ \\\ \\\___ \\\ |    |   (  <_> ) __ \\\_/ /_/ | \n";
+	cout << "   \\\______  /|__|   \\\____/____  >____  >|____|_  /\\\____(____  /\\\____ | \n";
+	cout << "          \\\/                  \\\/     \\\/        \\\/           \\\/      \\\/ \n\n\n";
+
+	cs.TextColor(15);
+	printf("                         Start Now \n");
+	printf("                         Introduction\n");
+	printf("                         Load Game\n");
+	printf("                         Exit\n");
+
+
+
+
+	int curPos_x = FirstchoicePos_X;
+	int curPos_y = FirstchoicePos_Y;
+
+	cs.gotoXY(curPos_y, curPos_x);
+	printf("->");
+
+
+	char key = _getch();
+	while (key != 13)
+	{
+		if (key == 's' || key == 'S')
+		{
+			cs.gotoXY(curPos_y, curPos_x);
+			printf("  ");
+
+			if (curPos_x == FirstchoicePos_X + NUMofOPTION)
+			{
+				curPos_x = FirstchoicePos_X;
+				cs.gotoXY(curPos_y, curPos_x);
+				printf("->");
+
+				if (_getch() != 13) {
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+			cs.gotoXY(curPos_y, ++curPos_x);
+			printf("->");
+		}
+		else if (key == 'w' || key == 'W')
+		{
+			cs.gotoXY(curPos_y, curPos_x);
+			printf("  ");
+
+			if (curPos_x == FirstchoicePos_X)
+			{
+				curPos_x = FirstchoicePos_X + NUMofOPTION;
+				cs.gotoXY(curPos_y, curPos_x);
+				printf("->");
+
+				if (_getch() != 13) {
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			cs.gotoXY(curPos_y, --curPos_x);
+			printf("->");
+		}
+
+		key = _getch();
+	}
+
+	if (curPos_x == FirstchoicePos_X + 1)
+		return 2;
+
+	if (curPos_x == FirstchoicePos_X)
+		return 1;
+
+	if (curPos_x == FirstchoicePos_X + NUMofOPTION)
+		return 3;
+
+	if (curPos_x == FirstchoicePos_X + 2)
+		return 4;
+
+}
+
+void CGAME::WaitingEffect() {
+
+	CONSOLE cs;
+
+	cs.gotoXY(WAITPOS_X, WAITPOS_Y - 1);
+	printf("Loading for next stage...");
+	cs.gotoXY(WAITPOS_X, WAITPOS_Y);
+	for (int i = 1; i <= WAITLENGTH; i++)
+	{
+		cs.TextColor(GREEN);
+		putchar(176);
+	}
+	cs.gotoXY(WAITPOS_X, WAITPOS_Y);
+	for (int i = 1; i <= WAITLENGTH; i++)
+	{
+		cs.TextColor(GREEN);
+		putchar(178);
+		Sleep(60);
+	}
+
+	cs.gotoXY(WAITPOS_X, WAITPOS_Y);
+	for (int i = 1; i <= WAITLENGTH; i++)
+	{
+		putchar(' ');
+	}
+}
+

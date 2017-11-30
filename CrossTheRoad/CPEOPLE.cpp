@@ -64,6 +64,32 @@ void CPEOPLE::MOVE(int key)
 
 }
 
+bool CPEOPLE::isImpact(vector <COBSTACLE*> &v_obs)
+{
+	for (int i = 0; i < v_obs.size(); i++)
+	{
+		if (v_obs[i]->GetX() == m_X && v_obs[i]->GetY() == m_Y)
+			return true;
+		if (v_obs[i]->GetX() + 1 == m_X && v_obs[i]->GetY() == m_Y)
+			return true;
+		if (v_obs[i]->GetX() + 2 == m_X && v_obs[i]->GetY() == m_Y)
+			return true;
+	}
+
+	return false;
+}
+
+bool CPEOPLE::isFinish()
+{
+	return m_Y == 1;
+}
+
+void CPEOPLE::BackToStart()
+{
+	m_X = PLAYER_STARTPOS_X;
+	m_Y = PLAYER_STARTPOS_Y;
+}
+
 CPEOPLE::~CPEOPLE()
 {
 	for (int i = 0; i < 2; i++)
