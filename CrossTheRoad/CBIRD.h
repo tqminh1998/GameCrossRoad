@@ -12,6 +12,5 @@ public:
 		m_shape[1][0] = ' ';
 		m_shape[1][1] = 223;
 		m_shape[1][2] = ' ';
-			
 	}
 };

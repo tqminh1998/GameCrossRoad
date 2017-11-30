@@ -90,6 +90,20 @@ void CPEOPLE::BackToStart()
 	m_Y = PLAYER_STARTPOS_Y;
 }
 
+void CPEOPLE::SaveGame(string file_name)
+{
+	ofstream fout(file_name, ios::binary | ios::app);
+
+	fout.write((char*)this, sizeof(CPEOPLE));
+
+	fout.close();
+}
+
+void CPEOPLE::LoadGame(string file_name)
+{
+	ifstream fin(file_name, ios::binary);
+}
+
 CPEOPLE::~CPEOPLE()
 {
 	for (int i = 0; i < 2; i++)
@@ -99,3 +113,4 @@ CPEOPLE::~CPEOPLE()
 
 	delete[]m_shape;
 }
+

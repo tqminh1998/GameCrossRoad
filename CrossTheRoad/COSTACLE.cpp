@@ -1,4 +1,5 @@
 #include "COBSTACLE.h"
+#include "CPEOPLE.h"
 
 COBSTACLE::COBSTACLE()
 {
@@ -13,6 +14,24 @@ COBSTACLE::COBSTACLE()
 	m_X = rand() % (WIDTH_RAND_TAIL - WIDTH_RAND_HEAD + 1) +
 		WIDTH_RAND_HEAD;
 
+}
+
+void COBSTACLE::SaveGame(string file_name)
+{
+	ofstream fout(file_name, ios::binary | ios::app);
+	fout.write((char*)this, sizeof(COBSTACLE));
+	fout.close();
+}
+
+void COBSTACLE::LoadGame(string file_name)
+{
+	ifstream fin(file_name, ios::binary);
+	
+	fin.seekg(sizeof(CPEOPLE), fin.beg);
+
+	
+
+	fin.close();
 }
 
 COBSTACLE::~COBSTACLE()

@@ -26,4 +26,6 @@ public:
 	bool isImpact(vector <COBSTACLE*> &v_obs);
 	bool isFinish();
 	void BackToStart();
+	void SaveGame(string file_name);
+	void LoadGame(string file_name);
 };

@@ -76,9 +76,11 @@ void CGAME::SaveGame()
 	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
 	cin >> file_name;
 	
-	ofstream fout(file_name, ios::binary);
-	
-	fout.write((char*)this, sizeof(CGAME));
+	m_player.SaveGame(file_name);
+	for (int i = 0; i < v_obs.size(); i++)
+	{
+		v_obs[i]->SaveGame(file_name);
+	}
 }
 
 void CGAME::DrawPlayArea()

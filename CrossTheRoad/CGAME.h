@@ -79,6 +79,7 @@ public:
 	void NextLevel();
 	void NewGame();
 	void SaveGame();
+	void LoadGame(string file_name);
 
 	void DISPLAY();
 	int MOVEMENT();
