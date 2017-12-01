@@ -5,6 +5,7 @@
 #include "CCAR.h"
 #include "CDINOSAUR.h"
 #include "CTRUCK.h"
+#include "CTRAFFICLIGHT.h"
 #include <iostream>
 #include <conio.h>
 #include <vector>
@@ -58,10 +59,9 @@ private:
 	CPEOPLE m_player;
 	int m_density;
 	vector <COBSTACLE*> v_obs;
+	vector <CTRAFFICLIGHT> v_traf;
 public:
 	CGAME();
-
-
 	void DrawBlock(int x, int y, int hei, int wid,
 		char **block, int color);
 	void CGAME::DrawString(int x, int y,
@@ -69,6 +69,7 @@ public:
 	void DrawPlayArea();
 	void DrawInfoArea();
 	void DrawPlayer();
+	void DrawTrafficLight();
 	void DrawBuffer();
 	void DrawObstacle();
 

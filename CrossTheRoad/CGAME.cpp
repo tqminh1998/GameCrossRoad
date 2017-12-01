@@ -15,8 +15,11 @@ CGAME::CGAME()
 
 void CGAME::SetGame()
 {
+	v_obs.clear();
 	v_obs.resize(m_density);
 	m_player.BackToStart();
+	v_traf.clear();
+	v_traf.resize(5);
 	
 	for (int i = 0; i < v_obs.size(); i++)
 	{
@@ -77,10 +80,42 @@ void CGAME::SaveGame()
 	cin >> file_name;
 	
 	m_player.SaveGame(file_name);
+	for (int i = 0; i < v_traf.size(); i++)
+	{
+		v_traf[i].SaveGame(file_name);
+	}
+
+	ofstream fout(file_name, ios::binary | ios::app);
+	fout.write((char*)&m_density, sizeof(int));
+	fout.close();
+
 	for (int i = 0; i < v_obs.size(); i++)
 	{
 		v_obs[i]->SaveGame(file_name);
 	}
+
+}
+
+void CGAME::LoadGame(string file_name)
+{
+	m_player.LoadGame(file_name);
+	v_traf.resize(5);
+	for (int i = 0; i < v_traf.size(); i++)
+	{
+		v_traf[i].LoadGame(file_name, i);
+	}
+	ifstream fin(file_name, ios::binary);
+	fin.seekg(sizeof(CPEOPLE), fin.beg);
+	fin.seekg(sizeof(CTRAFFICLIGHT) * 5, fin.cur);
+	fin.read((char*)&m_density, sizeof(int));
+	fin.close();
+	v_obs.resize(m_density);
+
+	for (int i = 0; i < v_obs.size(); i++)
+	{
+		v_obs[i]->LoadGame(file_name, i);
+	}
+
 }
 
 void CGAME::DrawPlayArea()
@@ -193,6 +228,24 @@ void CGAME::DrawObstacle()
 	}
 }
 
+void CGAME::DrawTrafficLight()
+{
+	for (int i = 0; i < v_traf.size(); i++)
+	{
+		v_traf[i].ChangeState();
+		if (v_traf[i].GetState() == 1)
+		{
+			Buffer[v_traf[i].GetY()][v_traf[i].GetX()].DrawIt(220, GREEN);
+			Buffer[v_traf[i].GetY() + 1][v_traf[i].GetX()].DrawIt(223, WHITE);
+		}
+		else
+		{
+			Buffer[v_traf[i].GetY()][v_traf[i].GetX()].DrawIt(220, RED);
+			Buffer[v_traf[i].GetY() + 1][v_traf[i].GetX()].DrawIt(223, WHITE);
+		}
+	}
+}
+
 void CGAME::DrawBuffer()
 {
 	for (int i = 0; i < MAX_HEIGHT; i++) {
@@ -212,6 +265,7 @@ void CGAME::DISPLAY()
 	this->DrawInfoArea();
 	this->DrawPlayer();
 	this->DrawObstacle();
+	this->DrawTrafficLight();
 	this->DrawBuffer();
 }
 
@@ -233,7 +287,7 @@ int CGAME::MOVEMENT()
 
 	for (int i = 0; i < v_obs.size(); i++)
 	{
-		v_obs[i]->Move();
+		v_obs[i]->Move(v_traf);
 	}
 
 	return 0;

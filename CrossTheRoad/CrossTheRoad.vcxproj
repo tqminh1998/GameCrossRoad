@@ -142,6 +142,7 @@
     <ClCompile Include="CGAME.cpp" />
     <ClCompile Include="COSTACLE.cpp" />
     <ClCompile Include="CPEOPLE.cpp" />
+    <ClCompile Include="CTRAFFICLIGHT.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OnePointCoor.cpp" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="COBSTACLE.h" />
     <ClInclude Include="CONSOLE.h" />
     <ClInclude Include="CPEOPLE.h" />
+    <ClInclude Include="CTRAFFICLIGHT.h" />
     <ClInclude Include="CTRUCK.h" />
     <ClInclude Include="OnePointCoor.h" />
   </ItemGroup>

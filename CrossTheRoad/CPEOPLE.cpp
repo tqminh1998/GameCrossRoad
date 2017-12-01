@@ -102,6 +102,8 @@ void CPEOPLE::SaveGame(string file_name)
 void CPEOPLE::LoadGame(string file_name)
 {
 	ifstream fin(file_name, ios::binary);
+	fin.read((char*)this, sizeof(CPEOPLE));
+	fin.close();
 }
 
 CPEOPLE::~CPEOPLE()

@@ -30,6 +30,9 @@
     <ClCompile Include="COSTACLE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CTRAFFICLIGHT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OnePointCoor.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CDINOSAUR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTRAFFICLIGHT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

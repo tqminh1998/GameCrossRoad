@@ -23,14 +23,15 @@ void COBSTACLE::SaveGame(string file_name)
 	fout.close();
 }
 
-void COBSTACLE::LoadGame(string file_name)
+void COBSTACLE::LoadGame(string file_name, int pos)
 {
 	ifstream fin(file_name, ios::binary);
 	
 	fin.seekg(sizeof(CPEOPLE), fin.beg);
-
-	
-
+	fin.seekg(sizeof(CTRAFFICLIGHT) * 5, fin.cur);
+	fin.seekg(sizeof(int), fin.cur);
+	fin.seekg(sizeof(COBSTACLE)*pos, fin.cur);
+	fin.read((char*)this, sizeof(COBSTACLE));
 	fin.close();
 }
 
@@ -59,23 +60,39 @@ char** COBSTACLE::GetShape()
 	return m_shape;
 }
 
-void COBSTACLE::Move()
+void COBSTACLE::Move(vector <CTRAFFICLIGHT> &v_traf)
 {
-	if (m_Y % 2 == 0)
+	bool STOP = false;
+	for (int i = 0; i < v_traf.size(); i++)
 	{
-		m_X += 2;
-		if (m_X > WIDTH_RAND_TAIL)
+		if (m_Y == v_traf[i].GetY())
 		{
-			m_X = WIDTH_RAND_HEAD;
+			if (v_traf[i].GetState() == 0)
+			{
+				STOP = true;
+				break;
+			}
 		}
-		
 	}
-	else
+
+	if (STOP == false)
 	{
-		m_X -= 2;
-		if (m_X <= 0)
+		if (m_Y % 2 == 0)
 		{
-			m_X = WIDTH_RAND_TAIL;
+			m_X += 2;
+			if (m_X > WIDTH_RAND_TAIL)
+			{
+				m_X = WIDTH_RAND_HEAD;
+			}
+
+		}
+		else
+		{
+			m_X -= 2;
+			if (m_X <= 0)
+			{
+				m_X = WIDTH_RAND_TAIL;
+			}
 		}
 	}
 }

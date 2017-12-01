@@ -44,7 +44,7 @@ int main()
 				Sleep(2000);
 				continue;
 			}
-
+			cg.LoadGame(file_in);
 			
 		}
 		

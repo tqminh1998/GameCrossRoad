@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <vector>
+#include "CTRAFFICLIGHT.h"
 using namespace std;
 
 const int CommonShape = 254;
@@ -22,7 +24,7 @@ public:
 	int GetY();
 	char **GetShape();
 
-	void Move();
+	void Move(vector <CTRAFFICLIGHT> &v_traf);
 	void SaveGame(string file_name);
-	void LoadGame(string file_name);
+	void LoadGame(string file_name, int pos);
 };
