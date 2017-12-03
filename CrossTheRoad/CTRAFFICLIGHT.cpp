@@ -1,27 +1,37 @@
 #include "CTRAFFICLIGHT.h"
 #include "CPEOPLE.h"
 
+
+
 CTRAFFICLIGHT::CTRAFFICLIGHT()
 {
 	m_state = rand() % 2;
 	m_cntTime = 0;
 	m_X = 73;
-	//bool check;
-	//int x;
-	//do {
-	//	check = true;
-	//	x = rand() % 9;
-	//	for (int i = 0; i < tmp.size(); i++)
-	//	{
-	//		if (x == tmp[i]) {
-	//			check = false;
-	//			break;
-	//		}
-	//	}
 
-	//} while(!check);
-	//tmp.push_back(1);
 	m_Y = Y[rand() % 9];
+}
+
+void CTRAFFICLIGHT::Locate(int i)
+{
+	switch (i)
+	{
+	case 0:
+		m_Y = 4;
+		break;
+	case 1:
+		m_Y = 13;
+		break;
+	case 2:
+		m_Y = 22;
+		break;
+	case 3:
+		m_Y = 19;
+		break;
+	case 4:
+		m_Y = 28;
+		break;
+	}
 }
 
 int CTRAFFICLIGHT::GetX()

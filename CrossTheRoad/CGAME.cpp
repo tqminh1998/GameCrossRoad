@@ -15,12 +15,15 @@ CGAME::CGAME()
 
 void CGAME::SetGame()
 {
-	v_obs.clear();
 	v_obs.resize(m_density);
 	m_player.BackToStart();
-	v_traf.clear();
 	v_traf.resize(5);
 	
+	for (int i = 0; i < v_traf.size(); i++)
+	{
+		v_traf[i].Locate(i);
+	}
+
 	for (int i = 0; i < v_obs.size(); i++)
 	{
 		int x = rand() % 4;
@@ -54,6 +57,28 @@ int CGAME::LoseGame()
 	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y);
 	cs.TextColor(YELLOW);
 	cout << "You Lose";
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
+	cout << "1. Play again";
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 2);
+	cout << "2. Back to main menu";
+	char key = '0';
+	do {
+		if (_kbhit())
+			key = _getch();
+	} while (key != '1' && key != '2');
+
+	if (key == '1')
+		return 1;
+
+	return 0;
+}
+
+int CGAME::WinGame()
+{
+	CONSOLE cs;
+	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y);
+	cs.TextColor(YELLOW);
+	cout << "You Win";
 	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
 	cout << "1. Play again";
 	cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 2);
@@ -108,7 +133,9 @@ void CGAME::LoadGame(string file_name)
 	fin.seekg(sizeof(CPEOPLE), fin.beg);
 	fin.seekg(sizeof(CTRAFFICLIGHT) * 5, fin.cur);
 	fin.read((char*)&m_density, sizeof(int));
+	
 	fin.close();
+	
 	v_obs.resize(m_density);
 
 	for (int i = 0; i < v_obs.size(); i++)
@@ -190,6 +217,8 @@ void CGAME::DrawInfoArea()
 		this->DrawString(84, 12, "EXPERT", WHITE);
 	if (m_density == BasicDensity + 40)
 		this->DrawString(84, 12, "LEGEND", WHITE);
+	if (m_density == BasicDensity + 50)
+		this->DrawString(84, 12, "LAST STAND", WHITE);
 	//Save
 	this->DrawString(78, 16, "Press L: Save", GREY);
 	this->DrawString(78, 17, "Press Esc: Back to menu", GREY);
@@ -300,6 +329,9 @@ int CGAME::PROCESS()
 
 	if (m_player.isFinish())
 		return 2;
+
+	if (m_density > BasicDensity + 50)
+		return 3;
 
 	return 0;
 }
@@ -428,3 +460,7 @@ void CGAME::WaitingEffect() {
 	}
 }
 
+int CGAME::getDen()
+{
+	return m_density;
+}

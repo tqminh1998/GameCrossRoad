@@ -76,6 +76,7 @@ public:
 	void SetGame();
 	int StartGame();
 	int LoseGame();
+	int WinGame();
 	void WaitingEffect();
 	void NextLevel();
 	void NewGame();
@@ -85,4 +86,6 @@ public:
 	void DISPLAY();
 	int MOVEMENT();
 	int PROCESS();
+
+	int getDen();
 };

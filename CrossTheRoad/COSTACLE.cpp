@@ -9,10 +9,18 @@ COBSTACLE::COBSTACLE()
 		m_shape[i] = new char[3];
 	}
 
-	m_Y = ArrayY[rand() % 9];
+	int a = rand() % 9;
+	int b = rand() % 18;
+
+	pair <int, int> tmp = Data[a][b];
+
+	m_X = tmp.second;
+	m_Y = tmp.first;
+
+	/*m_Y = ArrayY[rand() % 9];
 
 	m_X = rand() % (WIDTH_RAND_TAIL - WIDTH_RAND_HEAD + 1) +
-		WIDTH_RAND_HEAD;
+		WIDTH_RAND_HEAD;*/
 
 }
 
@@ -32,6 +40,7 @@ void COBSTACLE::LoadGame(string file_name, int pos)
 	fin.seekg(sizeof(int), fin.cur);
 	fin.seekg(sizeof(COBSTACLE)*pos, fin.cur);
 	fin.read((char*)this, sizeof(COBSTACLE));
+
 	fin.close();
 }
 
