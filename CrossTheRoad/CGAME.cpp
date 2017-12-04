@@ -13,6 +13,11 @@ CGAME::CGAME()
 	m_density = BasicDensity;
 }
 
+void CGAME::SetLevel(int level)
+{
+	m_density = level;
+}
+
 void CGAME::SetGame()
 {
 	v_obs.resize(m_density);
@@ -238,6 +243,7 @@ void CGAME::DrawInfoArea()
 	//Save
 	this->DrawString(78, 16, "Press L: Save", GREY);
 	this->DrawString(78, 17, "Press Esc: Back to menu", GREY);
+	this->DrawString(78, 15, "Press T: Load Game", GREY);
 }
 
 void CGAME::DrawString(int x, int y, string s, int color)
@@ -308,8 +314,9 @@ void CGAME::DISPLAY()
 {
 	this->DrawPlayArea();
 	this->DrawInfoArea();
-	this->DrawPlayer();
 	this->DrawObstacle();
+	this->DrawPlayer();
+
 	this->DrawTrafficLight();
 	this->DrawBuffer();
 }
@@ -323,8 +330,36 @@ int CGAME::MOVEMENT()
 		if (key == 27)
 			return 1;
 
-		if (key == 'l')
+		if (key == 'l' || key == 'L') {
 			this->SaveGame();
+			return 2;
+		}
+
+		if (key == 'T' || key == 't')
+		{
+			CONSOLE cs;
+			string file_name;
+			cs.gotoXY(Info2_Pos_X, Info2_Pos_Y);
+			cout << "Enter file name:";
+			cs.gotoXY(Info2_Pos_X, Info2_Pos_Y + 1);
+			cin >> file_name;
+
+			ifstream fin(file_name, ios::binary);
+			if (!fin)
+			{
+				cs.gotoXY(Info2_Pos_X, Info2_Pos_Y+1);
+				cout << "Not found";
+				Sleep(2000);
+				fin.close();
+				return 0;
+			}
+
+			
+
+			this->LoadGame(file_name);
+
+			return 3;
+		}
 
 		m_player.MOVE(key);
 
@@ -340,9 +375,9 @@ int CGAME::MOVEMENT()
 
 int CGAME::PROCESS()
 {
-	if (m_player.isImpact(v_obs))
+	if (m_player.isImpact(v_obs)) {
 		return 1;
-
+	}
 	if (m_player.isFinish())
 		return 2;
 
@@ -369,7 +404,7 @@ int CGAME::StartGame()
 
 	cs.TextColor(15);
 	printf("                         Start Now \n");
-	printf("                         Introduction\n");
+	printf("                         Setting\n");
 	printf("                         Load Game\n");
 	printf("                         Exit\n");
 

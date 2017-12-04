@@ -74,6 +74,7 @@ public:
 	void DrawObstacle();
 
 	void SetGame();
+	void SetLevel(int level);
 	int StartGame();
 	int LoseGame();
 	int WinGame();
