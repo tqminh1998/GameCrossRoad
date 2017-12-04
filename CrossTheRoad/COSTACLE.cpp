@@ -27,7 +27,11 @@ COBSTACLE::COBSTACLE()
 void COBSTACLE::SaveGame(string file_name)
 {
 	ofstream fout(file_name, ios::binary | ios::app);
-	fout.write((char*)this, sizeof(COBSTACLE));
+	/*fout.write((char*)this, sizeof(COBSTACLE));*/
+	
+	fout.write((char*)&m_X, sizeof(int));
+	fout.write((char*)&m_Y, sizeof(int));
+
 	fout.close();
 }
 
@@ -35,11 +39,17 @@ void COBSTACLE::LoadGame(string file_name, int pos)
 {
 	ifstream fin(file_name, ios::binary);
 	
-	fin.seekg(sizeof(CPEOPLE), fin.beg);
+	fin.seekg(sizeof(int)*2, fin.beg);
 	fin.seekg(sizeof(CTRAFFICLIGHT) * 5, fin.cur);
 	fin.seekg(sizeof(int), fin.cur);
-	fin.seekg(sizeof(COBSTACLE)*pos, fin.cur);
-	fin.read((char*)this, sizeof(COBSTACLE));
+	fin.seekg(sizeof(int)*2*pos, fin.cur);
+	
+	int x, y;
+	fin.read((char*)&x, sizeof(int));
+	fin.read((char*)&y, sizeof(int));
+
+	m_X = x;
+	m_Y = y;
 
 	fin.close();
 }

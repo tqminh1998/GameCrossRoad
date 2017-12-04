@@ -14,23 +14,72 @@ CTRAFFICLIGHT::CTRAFFICLIGHT()
 
 void CTRAFFICLIGHT::Locate(int i)
 {
-	switch (i)
+	m_state = rand() % 2;
+
+	int k = rand() % 3;
+
+	if (k == 0)
 	{
-	case 0:
-		m_Y = 4;
-		break;
-	case 1:
-		m_Y = 13;
-		break;
-	case 2:
-		m_Y = 22;
-		break;
-	case 3:
-		m_Y = 19;
-		break;
-	case 4:
-		m_Y = 28;
-		break;
+		switch (i)
+		{
+		case 0:
+			m_Y = 4;
+			break;
+		case 1:
+			m_Y = 13;
+			break;
+		case 2:
+			m_Y = 22;
+			break;
+		case 3:
+			m_Y = 19;
+			break;
+		case 4:
+			m_Y = 28;
+			break;
+		}
+	}
+	else if (k == 1)
+	{
+		switch (i)
+		{
+		case 0:
+			m_Y = 7;
+			break;
+		case 1:
+			m_Y = 13;
+			break;
+		case 2:
+			m_Y = 16;
+			break;
+		case 3:
+			m_Y = 19;
+			break;
+		case 4:
+			m_Y = 25;
+			break;
+		}
+	}
+	else if (k == 2)
+	{
+		switch (i)
+		{
+		case 0:
+			m_Y = 4;
+			break;
+		case 1:
+			m_Y = 16;
+			break;
+		case 2:
+			m_Y = 22;
+			break;
+		case 3:
+			m_Y = 19;
+			break;
+		case 4:
+			m_Y = 28;
+			break;
+		}
 	}
 }
 
@@ -73,7 +122,7 @@ void CTRAFFICLIGHT::SaveGame(string file_name)
 void CTRAFFICLIGHT::LoadGame(string file_name, int pos)
 {
 	ifstream fin(file_name, ios::binary);
-	fin.seekg(sizeof(CPEOPLE), fin.beg);
+	fin.seekg(sizeof(int)*2, fin.beg);
 	fin.seekg(sizeof(CTRAFFICLIGHT)*pos, fin.cur);
 
 	fin.close();

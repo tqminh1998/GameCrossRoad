@@ -94,7 +94,10 @@ void CPEOPLE::SaveGame(string file_name)
 {
 	ofstream fout(file_name, ios::binary | ios::app);
 
-	fout.write((char*)this, sizeof(CPEOPLE));
+	/*fout.write((char*)this, sizeof(CPEOPLE));*/
+
+	fout.write((char*)&m_X, sizeof(int));
+	fout.write((char*)&m_Y, sizeof(int));
 
 	fout.close();
 }
@@ -102,7 +105,15 @@ void CPEOPLE::SaveGame(string file_name)
 void CPEOPLE::LoadGame(string file_name)
 {
 	ifstream fin(file_name, ios::binary);
-	fin.read((char*)this, sizeof(CPEOPLE));
+	/*fin.read((char*)this, sizeof(CPEOPLE));*/
+
+	int x, y;
+	fin.read((char*)&x, sizeof(int));
+	fin.read((char*)&y, sizeof(int));
+
+	m_X = x;
+	m_Y = y;
+
 	fin.close();
 }
 

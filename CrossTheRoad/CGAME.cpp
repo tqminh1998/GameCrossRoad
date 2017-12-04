@@ -47,6 +47,10 @@ void CGAME::NewGame()
 void CGAME::NextLevel()
 {
 	m_density += 10;
+	for (int i = 0; i < v_traf.size(); i++)
+	{
+		v_traf[i].Locate(i);
+	}
 	this->WaitingEffect();
 	this->SetGame();
 }
@@ -130,13 +134,25 @@ void CGAME::LoadGame(string file_name)
 		v_traf[i].LoadGame(file_name, i);
 	}
 	ifstream fin(file_name, ios::binary);
-	fin.seekg(sizeof(CPEOPLE), fin.beg);
+	fin.seekg(sizeof(int)*2, fin.beg);
 	fin.seekg(sizeof(CTRAFFICLIGHT) * 5, fin.cur);
 	fin.read((char*)&m_density, sizeof(int));
-	
 	fin.close();
 	
 	v_obs.resize(m_density);
+
+	for (int i = 0; i < v_obs.size(); i++)
+	{
+		int x = rand() % 4;
+		if (x == 0)
+			v_obs[i] = new CBIRD;
+		else if (x == 1)
+			v_obs[i] = new CCAR;
+		else if (x == 2)
+			v_obs[i] = new CTRUCK;
+		else if (x == 3)
+			v_obs[i] = new CDINOSAUR;
+	}
 
 	for (int i = 0; i < v_obs.size(); i++)
 	{
