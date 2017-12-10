@@ -43,6 +43,9 @@ public:
 		LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
 		style = style & ~(WS_MAXIMIZEBOX)& ~(WS_THICKFRAME);
 		SetWindowLong(consoleWindow, GWL_STYLE, style);
+		RECT r;
+		GetWindowRect(consoleWindow, &r);
+		MoveWindow(consoleWindow, r.left, r.top, 1000, 800, TRUE);
 	}
 
 	void TextColor(int color)

@@ -15,6 +15,7 @@ int main()
 {
 	srand(time(NULL));
 	CONSOLE cs;
+	cs.FixConsoleWindow();
 	CGAME cg;
 
 	bool Sound = false;
@@ -203,8 +204,9 @@ int main()
 			int res = cg.PROCESS();
 			if (res == 1)
 			{
-				bool isPlay = PlaySound(L"car_crash.wav", NULL, SND_FILENAME);
 				
+				bool isPlay = PlaySound(L"car_crash.wav", NULL, SND_FILENAME);
+				cg.DeadEffect();
 				if (cg.LoseGame() == 1)
 				{
 					PlayAgain = true;

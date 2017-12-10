@@ -515,3 +515,21 @@ int CGAME::getDen()
 {
 	return m_density;
 }
+
+void CGAME::DeadEffect()
+{
+	int cl;
+	for (int i = 0; i < 15; i++)
+	{
+		cl = rand() % (15 - 8 + 1) + 8;
+		CONSOLE cs;
+		cs.TextColor(cl);
+		cs.gotoXY(m_player.GETX(), m_player.GETY());
+		putchar('+');
+		cs.gotoXY(m_player.GETX(), m_player.GETY() + 1);
+		putchar(234);
+		putchar(178);
+		putchar(178);
+		Sleep(250);
+	}
+}

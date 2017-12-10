@@ -89,4 +89,5 @@ public:
 	int PROCESS();
 
 	int getDen();
+	void DeadEffect();
 };

@@ -126,4 +126,3 @@ CPEOPLE::~CPEOPLE()
 
 	delete[]m_shape;
 }
-
